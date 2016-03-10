@@ -219,7 +219,7 @@ class SalesController < InheritedResources::Base
     @sale.add_events!(ecp_id: @ecp.id, customer_id: params[:customer_id].to_i)
     discount = @sale.build_discount(
       kind: 'percent',
-      value: @ecp.customer.default_discount_level.blank? ? '0' : @ecp.customer.default_discount_level
+      value: @ecp.try(:customer).try(:default_discount_level).blank? ? '0' : @ecp.customer.default_discount_level
     )
     discount.save
     @sale.update_amounts!
