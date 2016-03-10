@@ -69,6 +69,8 @@ class EventCustomerParticipant < ActiveRecord::Base
   after_create :add_ecps_to_children_course_events
   after_create :approve
 
+  after_save :send_notification_email
+
   EVENT_TYPES.each do |event_type|
     # :transports_attrs_blank?
     define_method "#{event_type.to_s}_attrs_blank?" do |attrs|
@@ -308,6 +310,16 @@ class EventCustomerParticipant < ActiveRecord::Base
       self.quantity = 1
     else
       self.customer_id = nil
+    end
+  end
+
+  def send_notification_email
+    event.users.where.not(email: nil).each do |user|
+      SaleMailer.delay.send_update_ecp_email( self, user.email )
+    end
+
+    event.customers.where.not(email: nil).each do |customer|
+      SaleMailer.delay.send_update_ecp_email( self, customer.email )
     end
   end
 end
