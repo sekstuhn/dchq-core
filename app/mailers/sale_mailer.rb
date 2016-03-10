@@ -86,10 +86,10 @@ class SaleMailer < ActionMailer::Base
     )
   end
 
-  def send_update_ecp_email ecp
+  def send_update_ecp_email ecp, email
     @ecp = ecp
     mail(
-      to: [ecp.event.customers.map(&:email), ecp.event.users.map(&:email)].flatten,
+      to: email,
       from: %("#{ecp.event.store.name}" <#{ecp.event.store.company.outbound_email}>),
       subject: "Event Booked: #{@ecp.event.full_name}"
     )

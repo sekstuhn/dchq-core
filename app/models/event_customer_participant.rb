@@ -314,6 +314,12 @@ class EventCustomerParticipant < ActiveRecord::Base
   end
 
   def send_notification_email
-    SaleMailer.delay.send_update_ecp_email( self )
+    event.users.where.not(email: nil).each do |user|
+      SaleMailer.delay.send_update_ecp_email( self, user.email )
+    end
+
+    event.customers.where.not(email: nil).each do |customer|
+      SaleMailer.delay.send_update_ecp_email( self, customer.email )
+    end
   end
 end
