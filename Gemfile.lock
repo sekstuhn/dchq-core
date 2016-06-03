@@ -532,7 +532,6 @@ DEPENDENCIES
   activemerchant
   acts-as-taggable-on
   acts_as_paranoid
-  airbrake
   apipie-rails
   barby!
   best_in_place
